@@ -3,6 +3,31 @@ import '../helpers.js';
 //Formation React Etape 3 - Contenu minimal du state
 
 class Timer extends Component {
+
+    componentDidMount() {
+        this.myInterval = setInterval(() => {this.forceUpdate()}, 50);
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.myInterval);
+    }
+
+    handlePlay = () => {
+        this.props.onPlay(this.props.id);
+    }
+
+    handlePause = () => {
+        this.props.onPause(this.props.id);
+    }
+
+    renderButton() {
+        if(this.props.runningSince) {
+            return <button onClick={this.handlePause} className="button">Pause</button>
+        } else {
+            return <button onClick={this.handlePlay} className="button">Lancer</button>
+        }
+    }
+
     render() {
         const elapsedString = window.helpers.renderElapsedString(
             this.props.elapsed,
@@ -21,11 +46,11 @@ class Timer extends Component {
                                 <h4>{elapsedString}</h4>
                             </div>
                                 <div className="actions">
-                                    <span className="trash">Supprimer</span>
+                                    <span onClick={() => {this.props.onDelete(this.props.id)}} className="trash">Supprimer</span>
                                     <span onClick={this.props.onEditFormOpen} className="edit">Modifier</span>
                                 </div>
                 </div>
-                <button className="button">Lancer</button>
+                {this.renderButton()}
             </div>
         )
     }
